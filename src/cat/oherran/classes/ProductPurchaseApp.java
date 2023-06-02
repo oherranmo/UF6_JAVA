@@ -1,6 +1,7 @@
 package cat.oherran.classes;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileInputStream;
@@ -98,6 +99,9 @@ public class ProductPurchaseApp extends JFrame {
         adjuntarPDFButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter imageFilter = new FileNameExtensionFilter(
+                        "Imatges", "jpg", "jpeg", "png", "gif");
+                fileChooser.setFileFilter(imageFilter);
                 int result = fileChooser.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
@@ -117,12 +121,13 @@ public class ProductPurchaseApp extends JFrame {
                 String adrecaClient = adrecaClientTextField.getText();
 
                 try {
-                    PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Clients (NomClient, CognomsClient, CorreuClient, TelefonClient, AdrecaClient) VALUES (?, ?, ?, ?, ?)");
+                    PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Clients (NomClient, CognomsClient, CorreuClient, TelefonClient, AdrecaClient, dniPdf) VALUES (?, ?, ?, ?, ?, ?)");
                     preparedStatement.setString(1, nomClient);
                     preparedStatement.setString(2, cognomsClient);
                     preparedStatement.setString(3, correuClient);
                     preparedStatement.setString(4, telefonClient);
                     preparedStatement.setString(5, adrecaClient);
+                    preparedStatement.setString(6,pdfPath);
                     preparedStatement.executeUpdate();
                     preparedStatement.close();
                 } catch (SQLException e) {
@@ -308,6 +313,11 @@ public class ProductPurchaseApp extends JFrame {
         }
     }
 }
+
+
+
+
+
 class PDFImageFrame extends JFrame {
     public PDFImageFrame(String image) {
         super("DNI");
